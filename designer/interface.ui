@@ -6,164 +6,283 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>484</width>
-    <height>528</height>
+    <width>592</width>
+    <height>648</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Gerador de Relatórios PDF</string>
   </property>
-  <property name="layoutDirection">
-   <enum>Qt::LeftToRight</enum>
-  </property>
-  <property name="animated">
-   <bool>true</bool>
-  </property>
-  <property name="documentMode">
-   <bool>false</bool>
-  </property>
-  <property name="tabShape">
-   <enum>QTabWidget::Rounded</enum>
+  <property name="styleSheet">
+   <string notr="true">/* === Global === */
+QMainWindow {
+    background-color: #FFFFFF;
+}
+
+QWidget {
+    font-family: &quot;Segoe UI&quot;, Arial, sans-serif;
+    font-size: 13px;
+    color: #333333;
+}
+
+/* === Labels === */
+QLabel {
+    font-weight: normal;
+    color: #454545;
+    margin-bottom: 4px; 
+}
+
+QLabel#label_SectionTitle { /* Para títulos de seção, se você adicionar */
+    font-size: 15px;
+    font-weight: bold;
+    color: #007BFF;
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+/* === Campos de Entrada === */
+QLineEdit, QTextEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #CED4DA;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 13px;
+    color: #495057;
+    selection-background-color: #007BFF;
+    selection-color: white;
+}
+
+QLineEdit:focus, QTextEdit:focus {
+    border: 1px solid #007BFF;
+}
+
+/* === Botões: Estilo Base === */
+QPushButton {
+    border-radius: 5px;
+    padding: 10px 20px; 
+    font-size: 13px;
+    font-weight: 500; /* Um pouco menos que bold, mais moderno (normal, 500, bold) */
+    border: 1px solid transparent;
+}
+
+QPushButton:hover {
+    opacity: 0.9;
+}
+
+/* === Botões Primários (ex: Carregar, Enviar) === */
+QPushButton#pushButton_carregar_arquivo,
+QPushButton#pushButton_enviar_email {
+    background-color: #007BFF;
+    color: white;
+    border-color: #007BFF;
+}
+QPushButton#pushButton_carregar_arquivo:hover,
+QPushButton#pushButton_enviar_email:hover {
+    background-color: #0069D9;
+    border-color: #0062CC;
+}
+QPushButton#pushButton_carregar_arquivo:pressed,
+QPushButton#pushButton_enviar_email:pressed {
+    background-color: #0056B3;
+    border-color: #0056B3;
+}
+
+/* === Botão de Reset/Alerta (ex: Resetar) === */
+QPushButton#pushButton_resetar {
+    background-color: #F8F9FA;
+    color: #DC3545;
+    border: 1px solid #DC3545;
+}
+QPushButton#pushButton_resetar:hover {
+    background-color: #DC3545;
+    color: white;
+}
+QPushButton#pushButton_resetar:pressed {
+    background-color: #C82333;
+    color: white;
+    border-color: #C82333;
+}
+
+/* === Botões Secundários/Neutros (ex: Histórico, Fechar) === */
+QPushButton#pushButton_historico,
+QPushButton#pushButton_fechar {
+    background-color: #6C757D;
+    color: white;
+    border-color: #6C757D;
+}
+QPushButton#pushButton_historico:hover,
+QPushButton#pushButton_fechar:hover {
+    background-color: #5A6268;
+    border-color: #545B62;
+}
+QPushButton#pushButton_historico:pressed,
+QPushButton#pushButton_fechar:pressed {
+    background-color: #545B62;
+    border-color: #4E555B;
+}
+
+/* === Barra de Progresso === */
+QProgressBar {
+    border: 1px solid #CED4DA;
+    border-radius: 5px;
+    background-color: #E9ECEF;
+    text-align: center;
+    color: #495057;
+    height: 26px;
+    font-weight: 500;
+}
+
+QProgressBar::chunk {
+    background-color: #28A745;
+    border-radius: 4px; 
+    margin: 2px;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_7">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QSplitter" name="splitter">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+     <layout class="QHBoxLayout" name="horizontalLayout_FileActions">
+      <property name="spacing">
+       <number>10</number>
       </property>
-      <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QLabel" name="label_arquivo_excel">
-          <property name="text">
-           <string>Carregue o arquivo excel:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QPushButton" name="pushButton_carregar_arquivo">
-            <property name="text">
-             <string>Carregar Arquivo</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_nome_arquivo">
-            <property name="text">
-             <string>&quot;Nome do arquivo aqui&quot;</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QPushButton" name="pushButton_resetar">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="cursor">
-        <cursorShape>ArrowCursor</cursorShape>
-       </property>
-       <property name="acceptDrops">
-        <bool>false</bool>
-       </property>
-       <property name="toolTip">
-        <string/>
-       </property>
-       <property name="toolTipDuration">
-        <number>-1</number>
-       </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Resetar</string>
-       </property>
-       <property name="autoDefault">
-        <bool>false</bool>
-       </property>
-       <property name="default">
-        <bool>false</bool>
-       </property>
-       <property name="flat">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </widget>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QLabel" name="label_relatorio">
+       <widget class="QLabel" name="label_nome_arquivo">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>-1</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
         <property name="text">
-         <string>Escreva o texto do seu relatório aqui:</string>
+         <string>1. Selecione o arquivo Excel para processar:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="textEdit_relatorio"/>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QLabel" name="label_destinatario">
-          <property name="text">
-           <string>Escreva o e-mail do destinatário:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_destinatario"/>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
-        <item>
-         <widget class="QLabel" name="label_destinatario_2">
-          <property name="text">
-           <string>Escreva o título do e-mail:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_destinatario_2"/>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <widget class="QLabel" name="label_destinatario_3">
+       <widget class="QPushButton" name="pushButton_carregar_arquivo">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
-         <string>Escreva o corpo do e-mail:</string>
+         <string>Carregar Arquivo</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="textEdit"/>
+       <widget class="QPushButton" name="pushButton_resetar">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Resetar</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <widget class="QLabel" name="label_relatorio">
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>-1</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>2. Escreva o texto principal do seu relatório (será incluído no PDF):</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="textEdit_relatorio">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>120</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_detales_email">
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>-1</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>3. Detalhes para envio do e-mail:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QFormLayout" name="formLayout_Email">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <property name="horizontalSpacing">
+       <number>10</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>10</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_destinatario_email">
+        <property name="text">
+         <string>E-mail do Destinatário:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lineEdit_destinatario_email"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_titulo_email">
+        <property name="text">
+         <string>Título do E-mail:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEdit_titulo_email"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_corpo_email">
+        <property name="text">
+         <string>Corpo do E-mail:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QTextEdit" name="textEdit_corpo_email">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_BottomActions">
+      <property name="spacing">
+       <number>10</number>
+      </property>
       <item>
        <widget class="QPushButton" name="pushButton_historico">
         <property name="text">
@@ -173,66 +292,71 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_fechar">
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
         <property name="text">
          <string>Fechar</string>
         </property>
        </widget>
       </item>
       <item>
+       <spacer name="horizontalSpacer_BottomActions">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <widget class="QPushButton" name="pushButton_enviar_email">
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
         <property name="text">
-         <string>Enviar</string>
+         <string>Enviar E-mail com PDF</string>
         </property>
        </widget>
       </item>
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_6">
-      <item>
-       <widget class="QProgressBar" name="progressBar_envio">
-        <property name="value">
-         <number>0</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="invertedAppearance">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_nome_etapa">
-        <property name="text">
-         <string>Nome da Etapa</string>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::PlainText</enum>
-        </property>
-        <property name="scaledContents">
-         <bool>false</bool>
-        </property>
-        <property name="wordWrap">
-         <bool>false</bool>
-        </property>
-        <property name="indent">
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QLabel" name="label_nome_etapa">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QProgressBar" name="progressBar">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>3</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="format">
+       <string>%p%</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar">
-   <property name="sizeGripEnabled">
-    <bool>true</bool>
-   </property>
-  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
