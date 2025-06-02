@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QApplication, QMainWindow
+from PySide2.QtWidgets import QApplication
 from main_window import MainWindow
 
 

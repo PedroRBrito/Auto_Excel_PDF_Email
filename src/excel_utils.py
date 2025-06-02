@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 class ExcelUtils:
     @staticmethod
     def ler_excel(caminho_arquivo, nome_planilha=None):

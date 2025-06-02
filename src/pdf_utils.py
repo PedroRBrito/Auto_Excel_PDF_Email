@@ -1,10 +1,10 @@
-import pandas as pd
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_JUSTIFY
 import os
+
 
 class PDFUtils:
     @staticmethod
@@ -17,13 +17,11 @@ class PDFUtils:
         nome_sem_ext = os.path.splitext(nome_excel)[0]
         nome_formatado = nome_sem_ext.replace("_", " ").title()
 
-        elementos.append(Paragraph(nome_formatado, styles['Title']))
-        elementos.append(Spacer(1,12))
+        elementos.append(Paragraph(nome_formatado, styles["Title"]))
+        elementos.append(Spacer(1, 12))
 
         estilo_justificado = ParagraphStyle(
-            'Justify',
-            parent=styles['Normal'],
-            alignment=TA_JUSTIFY
+            "Justify", parent=styles["Normal"], alignment=TA_JUSTIFY
         )
 
         if texto:
@@ -33,21 +31,18 @@ class PDFUtils:
         if dataframe is not None:
             data = [list(dataframe.columns)] + dataframe.values.tolist()
             tabela = Table(data)
-            estilo = TableStyle([
-                ('GRID', (0,0), (-1,-1), 1, colors.black), #Bordas da tabela
-                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'), #Cabeçalho em Negrito
-            ])
+            estilo = TableStyle(
+                [
+                    ("GRID", (0, 0), (-1, -1), 1, colors.black),  # Bordas da tabela
+                    (
+                        "FONTNAME",
+                        (0, 0),
+                        (-1, 0),
+                        "Helvetica-Bold",
+                    ),  # Cabeçalho em Negrito
+                ]
+            )
             tabela.setStyle(estilo)
             elementos.append(tabela)
 
         doc.build(elementos)
-
-# DataFrame de teste
-# df = pd.DataFrame({
-#         "Nome": ["Xuxulinha", "Xuxulinho", "Porquinhos"],
-#         "Idade": [27, 27, 28],
-#         "Locomoção": ["Mini Cooper", "Mustang E-Tech", "Meia"]
-#     })
-# texto_usuario = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-# caminho_excel = "Planilha Usuarios"
-# PDFUtils.gerar_pdf("../pdf/relatorio_teste.pdf", caminho_excel, texto_usuario, df)
