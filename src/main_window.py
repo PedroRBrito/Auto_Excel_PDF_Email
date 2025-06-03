@@ -1,10 +1,21 @@
 from typing import Optional
-from PySide2.QtWidgets import QMainWindow, QFileDialog, QMessageBox
+from historico import HistoricoDB
+from PySide2.QtWidgets import (
+    QVBoxLayout,
+    QMainWindow,
+    QFileDialog,
+    QMessageBox,
+    QDialog,
+    QTreeWidget,
+    QTreeWidgetItem,
+)
+from PySide2.QtGui import QFont
 from interface import Ui_MainWindow
 from excel_utils import ExcelUtils
 from pdf_utils import PDFUtils
 from email_utils import EmailUtils
 from dotenv import load_dotenv
+import textwrap
 import os
 
 load_dotenv()
@@ -13,6 +24,8 @@ load_dotenv()
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        HistoricoDB.inicializar()
+        print(os.path.abspath(HistoricoDB.DB_PATH))
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.excel_file: Optional[str] = None
@@ -41,7 +54,7 @@ class MainWindow(QMainWindow):
             self.excel_file = file_name
             print("arquivo carregado")
 
-    def resetar_opcoes(self):
+    def resetar_opcoes(self) -> None:
         resposta = QMessageBox.question(
             self,
             "Confirmar limpeza",
@@ -60,10 +73,70 @@ class MainWindow(QMainWindow):
             self.ui.progressBar.setValue(0)
             print("reset concluido")
 
-    def historico(self):
-        pass
+    def quebra_linhas(self, texto, tamanho=80) -> None:
+        return "\n".join(textwrap.wrap(texto, width=tamanho))
 
-    def enviar_email(self):
+    def historico(self) -> None:
+        registros = HistoricoDB.listar()
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Histórico de envios")
+        layout = QVBoxLayout()
+
+        tree = QTreeWidget()
+        tree.setColumnCount(1)
+        tree.setHeaderLabels(["Histórico"])
+        tree.setVerticalScrollMode(QTreeWidget.ScrollPerPixel)
+        tree.verticalScrollBar().setSingleStep(5)
+        tree.setHorizontalScrollMode(QTreeWidget.ScrollPerPixel)
+
+        font_filho_bold = QFont()
+        font_filho_bold.setBold(True)
+        font_pai_bold = QFont()
+        font_pai_bold.setBold(True)
+        font_pai_bold.setPointSize(10)
+
+        for registro in registros:
+            # Item pai: linha principal
+            pai_texto = f"{registro['data_hora']} | {registro['destinatario']} | {registro['nome_pdf']}"
+            item_pai = QTreeWidgetItem([pai_texto])
+            item_pai.setFont(0, font_pai_bold)
+
+            # Relatório do pdf
+            filho1_titulo = QTreeWidgetItem(["Relatório do pdf:"])
+            filho1_titulo.setFont(0, font_filho_bold)
+            filho1_conteudo = QTreeWidgetItem(
+                [self.quebra_linhas(registro["relatorio"], 60)]
+            )
+
+            # Título do e-mail
+            filho2_titulo = QTreeWidgetItem(["Título do e-mail:"])
+            filho2_titulo.setFont(0, font_filho_bold)
+            filho2_conteudo = QTreeWidgetItem([registro["titulo_email"]])
+
+            # Corpo do e-mail
+            filho3_titulo = QTreeWidgetItem(["Corpo do e-mail:"])
+            filho3_titulo.setFont(0, font_filho_bold)
+            filho3_conteudo = QTreeWidgetItem(
+                [self.quebra_linhas(registro["corpo"], 60)]
+            )
+
+            # Adiciona filhos ao pai
+            item_pai.addChild(filho1_titulo)
+            item_pai.addChild(filho1_conteudo)
+            item_pai.addChild(filho2_titulo)
+            item_pai.addChild(filho2_conteudo)
+            item_pai.addChild(filho3_titulo)
+            item_pai.addChild(filho3_conteudo)
+
+            tree.addTopLevelItem(item_pai)
+
+        layout.addWidget(tree)
+        dialog.setLayout(layout)
+        dialog.resize(700, 400)
+        dialog.exec_()
+
+    def enviar_email(self) -> None:
         if not self.excel_file:
             print("Nenhum arquivo excel selecionado")
 
@@ -115,5 +188,7 @@ class MainWindow(QMainWindow):
         print("email enviado!")
         self.ui.progressBar.setValue(100)
 
-    def fechar(self):
+        HistoricoDB.salvar(destinatario, nome_pdf, texto_usuario, corpo, titulo_email)
+
+    def fechar(self) -> None:
         self.close()
