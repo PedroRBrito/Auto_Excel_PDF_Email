@@ -36,14 +36,3 @@ class EmailUtils:
             smtp.login(remetente, senha)
             smtp.send_message(msg)
 
-
-# EmailUtils.enviar_email(
-#     destinatario="pedrorocha1654@gmail.com",
-#     titulo="Teste de envio",
-#     corpo="Teste de envio de e-mail para mim mesmo.",
-#     caminho_pdf="../pdf/relatorio_teste.pdf",
-#     remetente="pedrorocha1654@gmail.com",
-#     senha="tidw hnqu hgxb nptu",
-#     smtp_server="smtp.gmail.com",
-#     smtp_port=587
-# )
