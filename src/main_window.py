@@ -30,13 +30,32 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.excel_file: Optional[str] = None
 
+        # Botão de enviar e-mail desabilitado
+        self.ui.pushButton_enviar_email.setEnabled(False)
+
+        # Verificação de campos preenchidos
+        self.ui.pushButton_enviar_email.clicked.connect(self.enviar_email)
+        self.ui.lineEdit_destinatario_email.textChanged.connect(
+            self.verificar_campos_obrigatorios
+        )
+        self.ui.lineEdit_titulo_email.textChanged.connect(
+            self.verificar_campos_obrigatorios
+        )
+
         # Conectar botões a funções
+        self.ui.pushButton_carregar_arquivo.clicked.connect(self.carregar_arquivo_excel)
         self.ui.pushButton_historico.clicked.connect(self.historico)
         self.ui.pushButton_fechar.clicked.connect(self.fechar)
-        self.ui.pushButton_enviar_email.clicked.connect(self.enviar_email)
-        self.ui.pushButton_carregar_arquivo.clicked.connect(self.carregar_arquivo_excel)
         self.ui.pushButton_resetar.clicked.connect(self.resetar_opcoes)
         print("Janela iniciada")
+
+    def verificar_campos_obrigatorios(self):
+        campos_preenchidos = (
+            self.excel_file is not None
+            and self.ui.lineEdit_destinatario_email.text().strip() != ""
+            and self.ui.lineEdit_titulo_email.text().strip() != ""
+        )
+        self.ui.pushButton_enviar_email.setEnabled(bool(campos_preenchidos))
 
     def carregar_arquivo_excel(self) -> None:
         options = QFileDialog.Options()
@@ -48,10 +67,10 @@ class MainWindow(QMainWindow):
             options=options,
         )
         if file_name:
-            # self.nome_arquivo_completo = os.path(file_name)
             self.nome_arquivo_abv = os.path.basename(file_name)
             self.ui.label_nome_arquivo.setText(self.nome_arquivo_abv)
             self.excel_file = file_name
+            self.verificar_campos_obrigatorios()
             print("arquivo carregado")
 
     def resetar_opcoes(self) -> None:
@@ -137,58 +156,92 @@ class MainWindow(QMainWindow):
         dialog.exec_()
 
     def enviar_email(self) -> None:
-        if not self.excel_file:
-            print("Nenhum arquivo excel selecionado")
+        try:
+            # Ler o dataframe
+            etapa_atual = "Leitura do arquivo Excel"
+            df = ExcelUtils.ler_excel(self.excel_file)
+            print(type(df))
+            print("excel lido")
+            self.ui.progressBar.setValue(10)
 
-        # ler o dataframe
-        df = ExcelUtils.ler_excel(self.excel_file)
-        print(type(df))
-        print("excel lido")
-        self.ui.progressBar.setValue(10)
+            # Pegar o texto do usuário
+            etapa_atual = "Leitura do relatório do PDF"
+            texto_usuario = self.ui.textEdit_relatorio.toPlainText()
+            print("texto relatorio lido")
+            self.ui.progressBar.setValue(20)
 
-        # pegar o texto do usuário
-        texto_usuario = self.ui.textEdit_relatorio.toPlainText()
-        print("texto relatorio lido")
-        self.ui.progressBar.setValue(20)
+            # Gerar pdf
+            etapa_atual = "Criação do PDF"
+            nome_pdf = os.path.splitext(self.nome_arquivo_abv)[0] + ".pdf"
+            caminho_pdf = os.path.join("../pdf", nome_pdf)
+            os.makedirs(os.path.dirname(caminho_pdf), exist_ok=True)
+            self.ui.progressBar.setValue(30)
 
-        # gerar pdf
-        nome_pdf = os.path.splitext(self.nome_arquivo_abv)[0] + ".pdf"
-        caminho_pdf = os.path.join("../pdf", nome_pdf)
-        os.makedirs(os.path.dirname(caminho_pdf), exist_ok=True)
-        self.ui.progressBar.setValue(30)
+            PDFUtils.gerar_pdf(caminho_pdf, self.excel_file, texto_usuario, df)
+            print("pdf gerado")
+            self.ui.progressBar.setValue(40)
 
-        PDFUtils.gerar_pdf(caminho_pdf, self.excel_file, texto_usuario, df)
-        print("pdf gerado")
-        self.ui.progressBar.setValue(40)
+            # Pegar dados do email
+            etapa_atual = "Leitura de dados do e-mail"
+            destinatario = self.ui.lineEdit_destinatario_email.text()
+            titulo_email = self.ui.lineEdit_titulo_email.text()
+            corpo = self.ui.textEdit_corpo_email.toPlainText()
+            self.ui.progressBar.setValue(60)
 
-        # pegar dados do email
-        destinatario = self.ui.lineEdit_destinatario_email.text()
-        titulo_email = self.ui.lineEdit_titulo_email.text()
-        corpo = self.ui.textEdit_corpo_email.toPlainText()
-        self.ui.progressBar.setValue(60)
+            # Parametros do remetente
+            etapa_atual = "Leitura de dados do remetente"
+            remetente = os.getenv("EMAIL_REMETENTE")
+            senha = os.getenv("SENHA_REMETENTE")
+            smtp_server = "smtp.gmail.com"
+            smtp_port = 587
+            self.ui.progressBar.setValue(80)
+            if not remetente:
+                QMessageBox.critical(
+                    self,
+                    "Erro ao ler e-mail do remetente",
+                    "Configure corretamente o e-mail do remetente",
+                )
+                self.ui.progressBar.setValue(0)
+                return
+            if not senha:
+                QMessageBox.critical(
+                    self,
+                    "Erro ao ler senha do remetente",
+                    "Configure corretamente a senha do remetente",
+                )
+                self.ui.progressBar.setValue(0)
+                return
 
-        # parametros do remetente
-        remetente = os.getenv("EMAIL_REMETENTE")
-        senha = os.getenv("SENHA_REMETENTE")
-        smtp_server = "smtp.gmail.com"
-        smtp_port = 587
-        self.ui.progressBar.setValue(80)
+            # Enviar email com pdf em anexo
+            etapa_atual = "Envio de e-mail"
+            EmailUtils.enviar_email(
+                destinatario,
+                titulo_email,
+                corpo,
+                caminho_pdf,
+                remetente,
+                senha,
+                smtp_server,
+                smtp_port,
+            )
+            # print("email enviado!")
+            self.ui.progressBar.setValue(100)
 
-        # enviar email com pdf em anexo
-        EmailUtils.enviar_email(
-            destinatario,
-            titulo_email,
-            corpo,
-            caminho_pdf,
-            remetente,
-            senha,
-            smtp_server,
-            smtp_port,
-        )
-        print("email enviado!")
-        self.ui.progressBar.setValue(100)
+            HistoricoDB.salvar(
+                destinatario, nome_pdf, texto_usuario, corpo, titulo_email
+            )
 
-        HistoricoDB.salvar(destinatario, nome_pdf, texto_usuario, corpo, titulo_email)
+            QMessageBox.information(
+                self, "Status", f"E-mail enviado com sucesso para {destinatario}"
+            )
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro crítico",
+                f"Erro durante a etapa de: {etapa_atual}\n\nDetale: {e}",
+            )
+            self.ui.progressBar.setValue(0)
+            return
 
     def fechar(self) -> None:
         self.close()
