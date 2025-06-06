@@ -35,4 +35,3 @@ class EmailUtils:
             smtp.starttls()
             smtp.login(remetente, senha)
             smtp.send_message(msg)
-
