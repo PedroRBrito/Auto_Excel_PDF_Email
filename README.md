@@ -4,6 +4,8 @@ Este projeto é uma aplicação desktop desenvolvida em Python para automatizar 
 
 O programa utiliza uma interface gráfica construída com PySide2, facilitando a interação do usuário e eliminando a necessidade de operar via linha de comando.
 
+<video src="assets/demo.mkv" controls="true" autoplay="false" muted="true" width="700"></video>
+
 ---
 
 ## Funcionalidades
@@ -44,10 +46,6 @@ O programa utiliza uma interface gráfica construída com PySide2, facilitando a
 
 ### 1. Configuração do E-mail
 
-**⚠️ ATENÇÃO: A autenticação do Google mudou!**
-
-O método de "Acesso a apps menos seguros" foi descontinuado pelo Google. Para que o envio de e-mail funcione, você **precisa** usar uma **"Senha de App"**.
-
 1.  **Ative a Verificação em Duas Etapas** na sua Conta do Google.
 2.  Acesse a seção [Senhas de app](https://myaccount.google.com/apppasswords) da sua conta.
 3.  Gere uma nova senha. Selecione "E-mail" como o app e "Computador Windows/Mac" como o dispositivo.
@@ -63,16 +61,7 @@ SENHA_REMETENTE="sua_senha_de_app_de_16_caracteres"
 ```
 ## Como Usar o Programa
 
-1.  **Configurar Credenciais:**
-    * Crie um arquivo com nome `.env` na pasta raiz, fora de `/src`, com a seguinte estrutura:
-    ```
-    EMAIL_REMETENTE=seuemail@gmail.com
-    SENHA_REMETENTE=suasenha
-    ```
-    * No arquivo `.env`, substitua `seuemail@gmail.com` pelo seu endereço do Gmail.
-    * Substitua `sua_senha_de_app_de_16_caracteres` pela senha de aplicativo de 16 caracteres gerada na sua conta Google.
-
-2.  **Execução e Passos:**
+1.  **Execução e Passos:**
     * Execute o arquivo principal do projeto: `main.py`.
     * **Carregar Arquivo:** Clique no botão e selecione a planilha Excel desejada.
     * **Escrever Relatório:** Insira o texto principal do relatório no campo de texto fornecido.
@@ -81,18 +70,3 @@ SENHA_REMETENTE="sua_senha_de_app_de_16_caracteres"
 
 ---
 
-## Estrutura do Projeto
-
-O código-fonte é modularizado para facilitar a manutenção e o desenvolvimento, com cada arquivo tendo uma responsabilidade clara:
-```
-rpa_excel_pdf_email/
-├── src/
-│   ├── main.py             # Ponto de entrada da aplicação
-│   ├── main_window.py      # Lógica da janela principal
-│   ├── interface.py        # Configuração da UI (elementos visuais)
-│   ├── excel_utils.py      # Funções para manipulação do Excel
-│   ├── pdf_utils.py        # Funções para criação do PDF
-│   └── email_utils.py      # Funções para envio do e-mail
-├── pyproject.toml          # Definições do projeto e dependências (Poetry)
-└── README.md               # Documentação principal
-```
