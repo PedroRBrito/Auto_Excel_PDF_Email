@@ -4,7 +4,7 @@ Este projeto é uma aplicação desktop desenvolvida em Python para automatizar 
 
 O programa utiliza uma interface gráfica construída com PySide2, facilitando a interação do usuário e eliminando a necessidade de operar via linha de comando.
 
-<video src='https://github.com/user-attachments/assets/e83fef63-28d0-4be5-a346-3903f9c2e369' width=180/>
+<video src='https://github.com/user-attachments/assets/e83fef63-28d0-4be5-a346-3903f9c2e369' width=180/></video>
 ---
 
 ## Funcionalidades
