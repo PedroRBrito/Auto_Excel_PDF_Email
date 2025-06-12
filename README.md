@@ -5,7 +5,7 @@ Este projeto é uma aplicação desktop desenvolvida em Python para automatizar 
 O programa utiliza uma interface gráfica construída com PySide2, facilitando a interação do usuário e eliminando a necessidade de operar via linha de comando.
 
 [![Assista à demonstração](https://img.youtube.com/vi/ZbOoe7M2Fhk/0.jpg)](https://youtu.be/ZbOoe7M2Fhk)
-
+https://github.com/PedroRBrito/Auto_Excel_PDF_Email/blob/main/assets/demo.mkv
 ---
 
 ## Funcionalidades
